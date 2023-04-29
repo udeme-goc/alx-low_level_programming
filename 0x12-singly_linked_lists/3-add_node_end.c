@@ -1,63 +1,52 @@
 #include "lists.h"
 
 /**
- * add_node_end - adds a new node at the end
- * of a list_t list.
- * @head: head of the linked list.
- * @str: string to store in the list.
- * Return: address of the head.
+ * add_node_end - Adds a new node at the end of a list_t list.
+ * @head: A pointer to the head of the linked list.
+ * @str: The string to be added to the new node.
+ * code by Udeme Harrison
+ * Return: The address of the new node, or NULL if it failed.
  */
 
 list_t *add_node_end(list_t **head, const char *str)
 {
-	list_t *newNode, *temp;
-	size_t nchar;
+	list_t *new_node, *temp;
 
-	newNode = malloc(sizeof(list_t));
-	if (newNode == NULL)
+	if (head == NULL || str == NULL)
 		return (NULL);
 
-	newNode->str = strdup(str);
+	/* Allocate memory for the new node */
+	new_node = malloc(sizeof(list_t));
+	if (new_node == NULL)
+		return (NULL);
 
-	for (nchar = 0; str[nchar]; nchar++)
-	newNode->len = nchar;
-	newNode->next = NULL;
-	temp = *head;
-
-	if (temp == NULL)
+	/* Duplicate the string and set the new node's str and len fields */
+	new_node->str = strdup(str);
+	if (new_node->str == NULL)
 	{
-		*head = newNode;
+		free(new_node);
+		return (NULL);
+	}
+	new_node->len = strlen(str);
+	new_node->next = NULL;
+
+	/* If the list is empty, make the new node the head */
+	if (*head == NULL)
+	{
+		*head = new_node;
 	}
 	else
 	{
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = newNode;
+
+	/* Traverse the list to find the last node */
+	temp = *head;
+	while (temp->next != NULL)
+	temp = temp->next;
+
+	/* Add the new node to the end of the list */
+	temp->next = new_node;
 	}
 
-	return (*head);
+	/* Return the address of the new node */
+	return (new_node);
 }
-
-/**
-* Note - The function add_node_end takes a pointer to a pointer to
-* list_t struct, head, and a pointer to a string, str,
-* and adds a new node to the end of the linked list.
-*
-* First, it allocates memory for a new list_t struct and checks if
-* the allocation was successful.
-* If the allocation was unsuccessful, the function returns NULL.
-*
-* Next, the function sets the str member of the new node to a duplicate
-* of the input string, str, and sets the len member to the length of str.
-*
-* Then, the function sets the next member of the new node to NULL and
-* initializes a temp pointer to point to head.
-*
-* The function then checks if the head pointer is pointing to
-* an empty linked list.
-* If it is, the function sets the head pointer to point to the new node.
-* Otherwise, the function iterates through the linked list using
-* the temp pointer until it reaches the last node, and sets
-* the next member of the last node to point to the new node.
-* Finally, the function returns the address of the head node.
-*/
