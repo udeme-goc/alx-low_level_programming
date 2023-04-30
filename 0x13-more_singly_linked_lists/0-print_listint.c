@@ -13,16 +13,9 @@ size_t print_listint(const listint_t *h)
 
 	while (h != NULL) /* Traverse list until current node is NULL. */
 	{
-		printf("%d", h->n); /* Print the value of the current node. */
+		printf("%d\n", h->n); /* Print the value of the current node. */
 		count++; /* Increment the counter for each node encountered. */
-
-		if (h->next != NULL) /* If current node is not last, print space aft value. */
-		printf(" \n");
-
 		h = h->next; /* Move to the next node in the list. */
 	}
-
-	printf("\n"); /* Print newline after all nodes have been printed. */
-
 	return (count); /* Return the final count of nodes in the list. */
 }
