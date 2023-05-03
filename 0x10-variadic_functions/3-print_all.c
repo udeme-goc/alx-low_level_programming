@@ -2,108 +2,57 @@
 
 /**
  * print_all - prints anything
- * @format: list of types of arguments passed to the function
- * c: char
- * i: integer
- * f: float
- * s: char * (if the string is NULL, print (nil) instead)
+ * @format: a string containing the format for the values to be printed
  *
- * Return: nothing
+ * Return: void
  */
 
 void print_all(const char * const format, ...)
 {
-	va_list ap;
-	unsigned int i = 0, j;
-	char *str;
+	va_list vl;
+	char *string;
+	int i = 0;
 
-	/* array of format specifiers */
-	print_t ops[] = {
-		{'c', print_char},
-		{'i', print_int},
-		{'f', print_float},
-		{'s', print_string},
-		{'\0', NULL}
-	};
+	va_start(vl, format);
 
-	va_start(ap, format);
-
-	while (format && format[i])
+	while (format != NULL && format[i] != '\0')
 	{
-		/* reset the index of print_t array */
-		j = 0;
-
-		while (ops[j].type)
+		/* select format char */
+		switch (format[i])
 		{
-			/* if there is a match */
-			if (format[i] == ops[j].type)
-			{
-				/* call corresponding function and print separator */
-				ops[j].f(ap);
-				if (format[i + 1])
-				{
-					printf("%s", separator);
-				}
+			case 'c':
+				printf("%c", va_arg(vl, int));
 				break;
-			}
-			j++;
+			case 'i':
+				printf("%i", va_arg(vl, int));
+				break;
+			case 'f':
+				printf("%f", va_arg(vl, double));
+				break;
+			case 's':
+				/* get the string argument */
+				string = va_arg(vl, char *);
+				/* handle NULL argument */
+				if (string == NULL)
+				{
+					printf("(nil)");
+					break;
+				}
+				printf("%s", string);
+				break;
+			default:
+				/* ignore any format char other than c, i, f, s */
+				i++;
+				continue;
 		}
+		/* print separator if necessary */
+		if (format[(i + 1)] != '\0' && (format[i] == 'c' || format[i] == 'i' ||
+				format[i] == 'f' || format[i] == 's'))
+			printf(", ");
 		i++;
 	}
 
-	va_end(ap);
+	/* print newline character */
 	printf("\n");
-}
-
-/**
- * print_char - prints a character
- * @ap: argument list
- *
- * Return: nothing
- */
-
-void print_char(va_list ap)
-{
-	printf("%c", va_arg(ap, int));
-}
-
-/**
- * print_int - prints an integer
- * @ap: argument list
- *
- * Return: nothing
- */
-
-void print_int(va_list ap)
-{
-	printf("%d", va_arg(ap, int));
-}
-
-/**
- * print_float - prints a float
- * @ap: argument list
- *
- * Return: nothing
- */
-
-void print_float(va_list ap)
-{
-	printf("%f", va_arg(ap, double));
-}
-
-/**
- * print_string - prints a string
- * @ap: argument list
- *
- * Return: nothing
- */
-
-void print_string(va_list ap)
-{
-	str = va_arg(ap, char *);
-	if (!str)
-	{
-		str = "(nil)";
-	}
-	printf("%s", str);
+	va_end(vl);
 }
