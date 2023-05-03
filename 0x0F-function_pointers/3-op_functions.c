@@ -1,37 +1,72 @@
 #include "3-calc.h"
 
+int op_add(int a, int b);
+int op_sub(int a, int b);
+int op_mul(int a, int b);
+int op_div(int a, int b);
+int op_mod(int a, int b);
+
 /**
- * int_index - Searches for an integer in an array.
+ * op_add - Returns the sum of two numbers.
+ * @a: The first number.
+ * @b: The second number.
  *
- * @array: The array to search in.
- * @size: The number of elements in the array.
- * @cmp: The function to be used to compare values.
- *
- * Return: The index of the first element for which the cmp function does not
- *         return 0. If no element matches, return -1. If size <= 0, return -1.
+ * Return: The sum of a and b.
  */
 
-int int_index(int *array, int size, int (*cmp)(int))
+int op_add(int a, int b)
 {
-	int i;  /* declare a counter variable */
+	return (a + b);
+}
 
-	/* check if array and cmp function pointers are not NULL */
-	if (array == NULL || cmp == NULL)
-		return (-1);
+/**
+ * op_sub - Returns the difference of two numbers.
+ * @a: The first number.
+ * @b: The second number.
+ *
+ * Return: The difference of a and b.
+ */
 
-	/* check if size is greater than 0 */
-	if (size <= 0)
-		return (-1);
+int op_sub(int a, int b)
+{
+	return (a - b);
+}
 
-	/* loop through the array */
-	for (i = 0; i < size; i++)
-	{
-		/* apply the cmp function to each element */
-		if (cmp(array[i]) != 0)
-			/* if function does not return 0, return the index */
-			return (i);
-	}
+/**
+ * op_mul - Returns the product of two numbers.
+ * @a: The first number.
+ * @b: The second number.
+ *
+ * Return: The product of a and b.
+ */
 
-	/* if no element matches, return -1 */
-	return (-1);
+int op_mul(int a, int b)
+{
+	return (a * b);
+}
+
+/**
+ * op_div - Returns the division of two numbers.
+ * @a: The first number.
+ * @b: The second number.
+ *
+ * Return: The quotient of a and b.
+ */
+
+int op_div(int a, int b)
+{
+	return (a / b);
+}
+
+/**
+ * op_mod - Returns the remainder of the division of two numbers.
+ * @a: The first number.
+ * @b: The second number.
+ *
+ * Return: The remainder of the division of a by b.
+ */
+
+int op_mod(int a, int b)
+{
+	return (a % b);
 }
