@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#define ABS(x) (((x) < 0) ? - (x) : (x))
+#define ABS(x) (((x) < 0) ? -(x) : (x))
 
 #endif
