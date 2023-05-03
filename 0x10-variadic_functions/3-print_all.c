@@ -1,99 +1,49 @@
 #include "variadic_functions.h"
 
 /**
- * print_char - Prints a char.
+ * print_all - prints anything
+ * @format: list of types of arguments passed to the function
+ * c: char
+ * i: integer
+ * f: float
+ * s: char * (if the string is NULL, print (nil) instead)
  *
- * @valist: A va_list containing the char to print.
- */
-
-void print_char(va_list valist)
-{
-	printf("%c", va_arg(valist, int));
-}
-
-/**
- * print_integer - Prints an integer.
- *
- * @valist: A va_list containing the integer to print.
- */
-
-void print_integer(va_list valist)
-{
-	printf("%d", va_arg(valist, int));
-}
-
-/**
- * print_float - Prints a float.
- *
- * @valist: A va_list containing the float to print.
- */
-
-void print_float(va_list valist)
-{
-	printf("%f", va_arg(valist, double));
-}
-
-/**
- * print_string - Prints a string.
- *
- * @valist: A va_list containing the string to print.
- */
-
-void print_string(va_list valist)
-{
-	char *s = va_arg(valist, char *);
-
-	if (s == NULL)
-		printf("(nil)");
-	else
-		printf("%s", s);
-}
-
-/**
- * print_all - Prints anything.
- *
- * @format: A list of types of arguments passed to the function.
+ * Return: nothing
  */
 
 void print_all(const char * const format, ...)
 {
-	va_list valist;
-	int i = 0, j;
-	char *separator = "";
+	va_list ap;
+	unsigned int i = 0, j;
+	char *str;
 
-	/* Declare the list of function pointers. */
-	void (*print_fn[])(va_list) = {
-		print_char,
-		print_integer,
-		print_float,
-		print_string
+	/* array of format specifiers */
+	print_t ops[] = {
+		{'c', print_char},
+		{'i', print_int},
+		{'f', print_float},
+		{'s', print_string},
+		{'\0', NULL}
 	};
 
-	/* Declare the list of formats. */
-	char formats[] = "cifs";
+	va_start(ap, format);
 
-	/* Start the va_list. */
-	va_start(valist, format);
-
-	/* Loop through the format string. */
-	while (format != NULL && format[i] != '\0')
+	while (format && format[i])
 	{
+		/* reset the index of print_t array */
 		j = 0;
 
-		/* Loop through the list of formats. */
-		while (formats[j] != '\0')
+		while (ops[j].type)
 		{
-			/* Check if current format matches format in the list. */
-			if (format[i] == formats[j])
+			/* if there is a match */
+			if (format[i] == ops[j].type)
 			{
-				/* Print the separator, if necessary. */
-				printf("%s", separator);
-
-				/* Call the appropriate print function. */
-				print_fn[j](valist);
-
-				/* Set the separator for the next iteration. */
-				separator = ", ";
+				/* call corresponding function and print separator */
+				ops[j].f(ap);
+				if (format[i + 1])
+				{
+					printf("%s", separator);
+				}
 				break;
 			}
 			j++;
@@ -101,9 +51,59 @@ void print_all(const char * const format, ...)
 		i++;
 	}
 
-	/* End the va_list. */
-	va_end(valist);
-
-	/* Print a new line. */
+	va_end(ap);
 	printf("\n");
+}
+
+/**
+ * print_char - prints a character
+ * @ap: argument list
+ *
+ * Return: nothing
+ */
+
+void print_char(va_list ap)
+{
+	printf("%c", va_arg(ap, int));
+}
+
+/**
+ * print_int - prints an integer
+ * @ap: argument list
+ *
+ * Return: nothing
+ */
+
+void print_int(va_list ap)
+{
+	printf("%d", va_arg(ap, int));
+}
+
+/**
+ * print_float - prints a float
+ * @ap: argument list
+ *
+ * Return: nothing
+ */
+
+void print_float(va_list ap)
+{
+	printf("%f", va_arg(ap, double));
+}
+
+/**
+ * print_string - prints a string
+ * @ap: argument list
+ *
+ * Return: nothing
+ */
+
+void print_string(va_list ap)
+{
+	str = va_arg(ap, char *);
+	if (!str)
+	{
+		str = "(nil)";
+	}
+	printf("%s", str);
 }
