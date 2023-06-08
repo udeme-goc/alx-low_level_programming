@@ -9,12 +9,12 @@
 
 int _strlen(char *s)
 {
-    if (*s == '\0') /* Base case: end of string */
-    {
-        return 0;
-    }
+	if (*s == '\0') /* Base case: end of string */
+	{
+		return (0);
+	}
 
-    return (1 + _strlen(s + 1)); /* Call function recursively with next char */
+	return (1 + _strlen(s + 1)); /* Call function recursively with next char */
 }
 
 
@@ -24,21 +24,26 @@ int _strlen(char *s)
  * @start: The starting index of the string.
  * @end: The ending index of the string.
  *
+ * Note - A palindrome is a word, phrase, number, or sequence of characters
+ *	that reads the same forward and backward.
+ *
  * Return: 1 if the string is a palindrome, 0 otherwise.
  */
 
 int is_palindrome_recursive(char *s, int start, int end)
 {
-    if (start >= end) /* Base case: reached middle of string or beyond */
-    {
-        return (1);
-    }
+	if (start >= end) /* Base case: reached middle of string or beyond */
+	{
+		return (1);
+	}
 
-    if (s[start] != s[end]) /* If characters at start and end indices are not equal, it's not a palindrome */
-    {
-        return (0);
-    }
-    return is_palindrome_recursive(s, start + 1, end - 1); /* Call function recursively with updated indices */
+	if (s[start] != s[end]) /* xters at start & end indices !=, not palindrome */
+	{
+		return (0);
+	}
+
+	/* Call function recursively with updated indices */
+	return (is_palindrome_recursive(s, start + 1, end - 1));
 }
 
 
@@ -51,11 +56,13 @@ int is_palindrome_recursive(char *s, int start, int end)
 
 int is_palindrome(char *s)
 {
-    int len = _strlen(s);
+	int len = _strlen(s);
 
-    if (len <= 1) /* Check for empty string or single character string (both are palindromes) */
-    {
-        return (1);
-    }
-    return (is_palindrome_recursive(s, 0, len - 1)); /* Start the recursive palindrome check with start and end indices */
+	if (len <= 1) /* Check for empty or single xter string (both palindromes) */
+	{
+		return (1);
+	}
+
+	/* Start the recursive palindrome check with start and end indices */
+	return (is_palindrome_recursive(s, 0, len - 1));
 }
