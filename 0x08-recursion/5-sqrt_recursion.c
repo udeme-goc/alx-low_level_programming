@@ -51,20 +51,3 @@ int helper(int n, int guess)
 	else
 		return (helper(n, guess + 1));
 }
-
-
-/**
- * main - Entry point of the program
- *
- * Return: Always 0 (Success)
- */
-
-int main(void)
-{
-	int result = _sqrt_recursion(25);
-
-	/* Print the calculated square root */
-	printf("Square root: %d\n", result);
-
-	return (0);
-}
