@@ -1,38 +1,70 @@
 #include "main.h"
 
 /**
- * calculate_sqrt - Helper function to calculate the square root recursively.
- * @n: The number to find the square root of.
+ * helper - Recursive helper function to calculate square root.
+ * @n: The number to calculate the square root of.
  * @guess: The current guess for the square root.
  *
- * Return: Square root of n, or -1 if it does not have a natural square root.
+ * Return: The natural square root of the number, or -1 if it doesn't exist.
  */
 
-int calculate_sqrt(int n, int guess)
-{
-	if (guess * guess == n)
-		return (guess);
-	else if (guess * guess > n)
-		return (-1);
-	else
-		return (calculate_sqrt(n, guess + 1));
-}
+int helper(int n, int guess);
+
 
 /**
- * _sqrt_recursion - Returns the natural square root of a number.
- * @n: The number to find the square root of.
+ * _sqrt_recursion - Calculates the natural square root of a number.
+ * @n: The number to calculate the square root of.
  *
- * Return: Square root of n, or -1 if it does not have a natural square root.
+ * Return: The natural square root of the number, or -1 if it doesn't exist.
  */
 
 int _sqrt_recursion(int n)
 {
+	/* Check if n is negative */
 	if (n < 0)
 		return (-1);
-	else if (n == 0 || n == 1)
-		return (n);
-	else
-		return (calculate_sqrt(n, 1));
+
+	/* Call the helper function to calculate square root */
+	return (helper(n, 1));
 }
 
-printf("\n"); /* Add new line at end of program */
+
+/**
+ * helper - Recursive helper function to calculate square root.
+ * @n: The number to calculate the square root of.
+ * @guess: The current guess for the square root.
+ *
+ * Return: The natural square root of the number, or -1 if it doesn't exist.
+ */
+
+int helper(int n, int guess)
+{
+	/* Base case: square of guess equals n */
+	if (guess * guess == n)
+		return (guess);
+
+	/* Base case: square of guess exceeds n */
+	else if (guess * guess > n)
+		return (-1);
+
+	/* Recursive case: increment guess and call helper function again */
+	else
+		return (helper(n, guess + 1));
+}
+
+
+/**
+ * main - Entry point of the program
+ *
+ * Return: Always 0 (Success)
+ */
+
+int main(void)
+{
+	int result = _sqrt_recursion(25);
+
+	/* Print the calculated square root */
+	printf("Square root: %d\n", result);
+
+	return (0);
+}
