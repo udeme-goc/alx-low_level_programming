@@ -35,4 +35,4 @@ int _sqrt_recursion(int n)
 		return (calculate_sqrt(n, 1));
 }
 
-printf('\n') /* Add new line at end of program */
+printf("\n"); /* Add new line at end of program */
