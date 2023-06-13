@@ -10,7 +10,6 @@ void free_grid(int **grid, int height);
 char *argstostr(int ac, char **av);
 char **strtow(char *str);
 int allocate_memory(char *str, char **words, int count);
-int count_words(char *str);
 
 /* Standard libraries */
 #include <stddef.h>
