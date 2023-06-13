@@ -1,6 +1,72 @@
 #include "main.h"
 
 /**
+ * count_words - Counts the number of words in a string.
+ * @str: The string to count words from.
+ *
+ * Return: The number of words.
+ */
+
+int count_words(char *str)
+{
+	int i, count = 0;
+	int len = strlen(str);
+
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] != ' ')
+		{
+			count++;
+			while (str[i] != ' ' && str[i] != '\0')
+				i++;
+		}
+	}
+
+	return (count);
+}
+
+
+/**
+ * allocate_memory - Allocates memory for the words array.
+ * @str: The string to split into words.
+ * @words: The array to store the words.
+ * @count: The number of words.
+ *
+ * Return: 1 on success, 0 on failure.
+ */
+
+int allocate_memory(char *str, char **words, int count)
+{
+	int i, j, index = 0;
+	int len = strlen(str);
+
+	words[count] = NULL;
+
+	for (i = 0; i < len; i++)
+	{
+		if (str[i] != ' ')
+		{
+			j = i;
+			while (str[j] != ' ' && str[j] != '\0')
+				j++;
+
+			words[index] = malloc(sizeof(char) * (j - i + 1));
+			if (words[index] == NULL)
+				return (0);
+
+			for (; i < j; i++)
+				words[index][i - index] = str[i];
+
+			words[index][i - index] = '\0';
+			index++;
+		}
+	}
+
+	return (1);
+}
+
+
+/**
  * strtow - Splits a string into words.
  * @str: The string to be split.
  *
@@ -11,88 +77,29 @@
 char **strtow(char *str)
 {
 	char **words;
-	int i, j, k, len, count = 0, index = 0;
+	int count;
 
+	/* Check for empty string or NULL input */
 	if (str == NULL || *str == '\0')
 		return (NULL);
 
-	len = strlen(str);
-	words = malloc(sizeof(char *) * (len + 1));
+	/* Count the number of words in the string */
+	count = count_words(str);
 
+	/* Allocate memory for the words array */
+	words = malloc(sizeof(char *) * (count + 1));
 	if (words == NULL)
 		return (NULL);
 
-	/* Count the number of words in the string */
-	for (i = 0; i < len; i++)
+	/* Allocate memory for each word and copy it from the string */
+	if (!allocate_memory(str, words, count))
 	{
-		if (str[i] != ' ' && str[i] != '\n' && str[i] != '\r')
-		{
-			count++;
-			while (str[i] != ' ' && str[i] != '\n' && str[i] != '\r' && str[i] != '\0')
-				i++;
-		}
-	}
-
-	/* Allocate memory for the words array */
-	words[count] = NULL;
-
-	for (i = 0; i < len; i++)
-	{
-		if (str[i] != ' ' && str[i] != '\n' && str[i] != '\r')
-		{
-			j = i;
-			while (str[j] != ' ' && str[j] != '\n' && str[j] != '\r' && str[j] != '\0')
-				j++;
-
-			/* Allocate memory for each word */
-			words[index] = malloc(sizeof(char) * (j - i + 1));
-			if (words[index] == NULL)
-			{
-				/* Free memory if allocation fails */
-				for (k = 0; k < index; k++)
-					free(words[k]);
-				free(words);
-				return (NULL);
-			}
-
-			/* Copy each word from the string */
-			for (k = 0; i < j; i++, k++)
-			{
-				words[index][k] = str[i];
-			}
-			words[index][k] = '\0';
-			index++;
-		}
-	}
-
-	/* Null-terminate the last element of the words array */
-	words[index] = NULL;
-
-	/* Free memory for words if no words were found */
-	if (count == 0)
-	{
+		/* Free memory if allocation fails */
+		for (int i = 0; i < count; i++)
+			free(words[i]);
 		free(words);
-		words = NULL;
+		return (NULL);
 	}
 
 	return (words);
 }
-
-/**
- * free_words - Frees the memory allocated for an array of words.
- * @words: The array of words to be freed.
- */
-
-void free_words(char **words)
-{
-	int i;
-
-	if (words == NULL)
-		return;
-
-	for (i = 0; words[i] != NULL; i++)
-		free(words[i]);
-
-	free(words);
-}
-
