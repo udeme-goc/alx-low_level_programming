@@ -17,6 +17,9 @@ void print_osabi(unsigned char osabi);
 void print_type(unsigned int type);
 void print_entry(unsigned long int entry);
 void read_elf_header(char *filename);
+void close_file(int FD);
+
+#define BUF_SIZE 1024
 
 #endif /* MAIN_H */
 
