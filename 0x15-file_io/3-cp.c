@@ -35,14 +35,12 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
 		exit(97);
 	}
-
 	inputFD = open(argv[1], O_RDONLY);
 	if (inputFD == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		exit(98);
 	}
-
 	outputFD = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (outputFD == -1)
 	{
@@ -65,7 +63,6 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		exit(98);
 	}
-
 	close_file(inputFD);
 	close_file(outputFD);
 
