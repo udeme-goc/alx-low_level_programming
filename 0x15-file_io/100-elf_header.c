@@ -4,6 +4,9 @@
  * error_exit - Prints an error message and exits with a specific code.
  * @code: The exit code.
  * @message: The error message to print.
+ *
+ * Description: This function prints the error message to stderr and exits
+ *              the program with the given exit code.
  */
 
 void error_exit(int code, char *message)
@@ -14,197 +17,63 @@ void error_exit(int code, char *message)
 
 
 /**
- * print_magic - Prints the ELF magic numbers.
- * @magic: The magic numbers array.
+ * print_header_field - Prints a specific field of the ELF header.
+ * @field: The field value to print.
+ * @format: The format string for printing the field.
+ *
+ * Description: This function prints a specific field of the ELF header
+ *              with the given format string.
  */
-
-void print_magic(unsigned char *magic)
+void print_header_field(void *field, char *format)
 {
-	int i;
-
-	printf("  Magic:   ");
-	for (i = 0; i < 16; i++)
-		printf("%02x ", magic[i]);
-		printf("\n");
+	printf(format, *((unsigned int *)field));
 }
 
 
 /**
- * print_class - Prints the ELF class.
- * @class: The ELF class.
+ * print_header_string - Prints a string field of the ELF header.
+ * @field: The field value to print.
+ *
+ * Description: This function prints a string field of the ELF header.
  */
 
-void print_class(unsigned char class)
+void print_header_string(char *field)
 {
-	printf("  Class:                             ");
-	switch (class)
-	{
-		case ELFCLASS32:
-			printf("ELF32\n");
-			break;
-		case ELFCLASS64:
-			printf("ELF64\n");
-			break;
-		default:
-			printf("<unknown>\n");
-			break;
-	}
+	printf("  %s: %s\n", field, field + sizeof(unsigned int));
 }
 
 
 /**
- * print_data - Prints the ELF data encoding.
- * @data: The ELF data encoding.
- */
-
-void print_data(unsigned char data)
-{
-	printf("  Data:                              ");
-	switch (data)
-	{
-		case ELFDATA2LSB:
-			printf("2's complement, little endian\n");
-			break;
-		case ELFDATA2MSB:
-			printf("2's complement, big endian\n");
-			break;
-		default:
-			printf("<unknown>\n");
-			break;
-	}
-}
-
-
-/**
- * print_version - Prints the ELF version.
- * @version: The ELF version.
- */
-
-void print_version(unsigned char version)
-{
-	printf("  Version:                           %d (current)\n", version);
-}
-
-
-/**
- * print_osabi - Prints the ELF OS/ABI.
- * @osabi: The ELF OS/ABI.
- */
-
-void print_osabi(unsigned char osabi)
-{
-	printf("  OS/ABI:                            ");
-	switch (osabi)
-	{
-		case ELFOSABI_SYSV:
-			printf("UNIX - System V\n");
-			break;
-		case ELFOSABI_HPUX:
-			printf("HP-UX\n");
-			break;
-		case ELFOSABI_NETBSD:
-			printf("UNIX - NetBSD\n");
-			break;
-		case ELFOSABI_LINUX:
-			printf("UNIX - Linux\n");
-			break;
-		case ELFOSABI_SOLARIS:
-			printf("UNIX - Solaris\n");
-			break;
-		case ELFOSABI_IRIX:
-			printf("IRIX\n");
-			break;
-		case ELFOSABI_FREEBSD:
-			printf("UNIX - FreeBSD\n");
-			break;
-		case ELFOSABI_TRU64:
-			printf("TRU64 UNIX\n");
-			break;
-		case ELFOSABI_ARM:
-			printf("ARM architecture\n");
-			break;
-		case ELFOSABI_STANDALONE:
-			printf("Standalone (embedded) application\n");
-			break;
-		default:
-			printf("<unknown>\n");
-			break;
-	}
-}
-
-
-/**
- * print_type - Prints the ELF file type.
- * @type: The ELF file type.
- */
-
-void print_type(unsigned int type)
-{
-	printf("  Type:                              ");
-	switch (type)
-	{
-		case ET_NONE:
-			printf("NONE (Unknown type)\n");
-			break;
-		case ET_REL:
-			printf("REL (Relocatable file)\n");
-			break;
-		case ET_EXEC:
-			printf("EXEC (Executable file)\n");
-			break;
-		case ET_DYN:
-			printf("DYN (Shared object file)\n");
-			break;
-		case ET_CORE:
-			printf("CORE (Core file)\n");
-			break;
-		default:
-			printf("<unknown>\n");
-			break;
-	}
-}
-
-
-/**
- * print_entry - Prints the ELF entry point address.
- * @entry: The ELF entry point address.
- */
-
-void print_entry(unsigned long int entry)
-{
-	printf("  Entry point address:               0x%lx\n", entry);
-}
-
-
-/**
- * read_elf_header - Reads the ELF header of the given file.
+ * read_elf_header - Reads and prints the ELF header of the given file.
  * @filename: The name of the file to read.
+ *
+ * Description: This function reads and prints the ELF header of the
+ *              specified file.
  */
 
 void read_elf_header(char *filename)
 {
-	int fd, bytes_read;
+	int fd;
 	Elf64_Ehdr header;
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		error_exit(98, "Error: Cannot open file");
 
-	bytes_read = read(fd, &header, sizeof(header));
-	if (bytes_read == -1 || bytes_read != sizeof(header))
+	if (read(fd, &header, sizeof(header)) != sizeof(header))
 		error_exit(98, "Error: Cannot read from file");
 
 	close(fd);
 
 	printf("ELF Header:\n");
-	print_magic(header.e_ident);
-	print_class(header.e_ident[EI_CLASS]);
-	print_data(header.e_ident[EI_DATA]);
-	print_version(header.e_ident[EI_VERSION]);
-	print_osabi(header.e_ident[EI_OSABI]);
-	printf("  ABI Version:                       %d\n", header.e_ident[EI_ABIVERSION]);
-	print_type(header.e_type);
-	print_entry(header.e_entry);
+	print_header_field(header.e_ident, "  Magic:   %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n");
+	print_header_string(header.e_ident + EI_CLASS);
+	print_header_string(header.e_ident + EI_DATA);
+	print_header_field(&header.e_ident[EI_VERSION], "  Version: %d (current)\n");
+	print_header_string(header.e_ident + EI_OSABI);
+	printf("  ABI Version: %d\n", header.e_ident[EI_ABIVERSION]);
+	print_header_field(&header.e_type, "  Type:    %d\n");
+	print_header_field(&header.e_entry, "  Entry point address: 0x%lx\n");
 }
 
 
@@ -214,6 +83,10 @@ void read_elf_header(char *filename)
  * @argv: The arguments array.
  *
  * Return: 0 on success.
+ *
+ * Description: This is the main function that reads the name of an ELF file
+ *              from the command line and displays the information contained
+ *              in the ELF header of the file.
  */
 
 int main(int argc, char **argv)
@@ -225,4 +98,3 @@ int main(int argc, char **argv)
 
 	return (0);
 }
-
