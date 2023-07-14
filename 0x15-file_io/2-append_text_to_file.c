@@ -1,85 +1,51 @@
 #include "main.h"
 
 /**
- * close_file - Closes an opened file.
- * @FD: File descriptor to close.
+ * append_text_to_file - Append text at the end of a file.
+ * @filename: Name of the file to create.
+ * @text_content: Text to write inside the file.
  *
- * Return: None.
+ * Return: 1 if text_content was appended, -1 otherwise.
  */
 
-void close_file(int FD)
+int append_text_to_file(const char *filename, char *text_content)
 {
-	/* Close the file descriptor */
-	if (close(FD) == -1)
+	int fd_open, fd_write;
+
+	if (filename == NULL)
+		return (-1);
+
+	/* Open the file for reading and appending */
+	fd_open = open(filename, O_RDWR | O_APPEND);
+	if (fd_open == -1)
+		return (-1);
+
+	if (text_content != NULL)
 	{
-		/* Error occurred while closing file descriptor */
-		dprintf(STDERR_FILENO, "Error: Can't close fd %i\n", FD);
-		exit(100);
+		/* Write the text_content to the file */
+		fd_write = write(fd_open, text_content, _strlen(text_content));
+		if (fd_write == -1)
+			return (-1);
 	}
+
+	/* Close the file */
+	close(fd_open);
+	return (1);
 }
 
 
 /**
- * main - Entry point.
- * @argc: Number of arguments passed to the function.
- * @argv: Two files.
+ * _strlen - Calculate the length of a string.
+ * @str: Array of characters.
  *
- * Return: 0 on success, other values on failure.
+ * Return: Length of the string.
  */
 
-int main(int argc, char *argv[])
+int _strlen(char *str)
 {
-	int inputFD, outputFD, nBytes_read, nBytes_write;
-	char text[BUF_SIZE];
+	int count = 0;
 
-	/* Check if the correct number of arguments is provided */
-	if (argc != 3)
-	{
-		/* Incorrect number of arguments, display error message */
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
-		exit(97);
-	}
-
-	/* Open the input file for reading */
-	inputFD = open(argv[1], O_RDONLY);
-	if (inputFD == -1)
-	{
-		/* Error opening the input file, display error message */
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-		exit(98);
-	}
-
-	/* Open the output file for writing, create if it doesn't exist */
-	outputFD = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	if (outputFD == -1)
-	{
-		/* Error opening the output file, display error message */
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-		exit(99);
-	}
-
-	/* Read data from the input file and write to the output file */
-	while ((nBytes_read = read(inputFD, text, BUF_SIZE)) > 0)
-	{
-		nBytes_write = write(outputFD, text, nBytes_read);
-		if (nBytes_write == -1)
-		{
-			/* Error occurred while writing to the output file, display error message */
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
-			exit(99);
-		}
-	}
-
-	if (nBytes_read == -1)
-	{
-		/* Error occurred while reading from the input file, display error message */
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
-		exit(98);
-	}
-
-	/* Close the input and output files */
-	close_file(inputFD);
-	close_file(outputFD);
-
-	return (0);
+	while (*str++)
+		count++;
+	return (count);
 }
