@@ -66,7 +66,8 @@ void read_elf_header(char *filename)
 	close(fd);
 
 	printf("ELF Header:\n");
-	print_header_field(header.e_ident, "  Magic:   %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n");
+	print_header_field(header.e_ident, "  Magic:   %02x %02x %02x %02x %02x	"
+			" %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n");
 	print_header_string(header.e_ident + EI_CLASS);
 	print_header_string(header.e_ident + EI_DATA);
 	print_header_field(&header.e_ident[EI_VERSION], "  Version: %d (current)\n");
