@@ -43,5 +43,7 @@ dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n);
 /* Task 6: Deletes the node at index index of a dlistint_t linked list */
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index);
 
+size_t dlistint_len(const dlistint_t *h);
+
 #endif /* LISTS_H */
 
