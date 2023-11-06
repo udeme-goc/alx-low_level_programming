@@ -1,8 +1,13 @@
 #ifndef HASH_TABLES_H
 #define HASH_TABLES_H
 
-/* Data Structures */
+/* Standard Library */
 
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+/* Data Structures */
 
 /**
  * struct hash_node_s - Node of a sorted hash table
