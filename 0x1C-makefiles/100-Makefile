@@ -12,7 +12,7 @@ $(NAME): $(OBJ)
 
 -include $(SRC:.c=.d)
 
-%.o: %.c
+%.o: %.c m.h
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 clean:
@@ -21,8 +21,8 @@ clean:
 oclean:
 	$(RM) $(OBJ)
 
-fclean: clean
-	$(RM) $(NAME)
+fclean: clean oclean
+	# $(RM) $(NAME)
 
 re: fclean all
 
