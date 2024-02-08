@@ -36,15 +36,13 @@ int jump_search(int *array, size_t size, int value)
 	printf("Value found between indexes [%lu] and [%lu]\n", prev, curr);
 
 	/* Perform a linear search within the identified block */
-	while (array[prev] < value && prev < size)
+	while (prev < size && prev <= curr)
 	{
 		printf("Value checked array[%lu] = [%d]\n", prev, array[prev]);
+		if (array[prev] == value)
+			return (prev);	/* Return its index */
 		prev++;	/* Move to the next element */
 	}
-
-	/* Check if the value is found */
-	if (array[prev] == value)
-		return (prev);	/* Return its index */
 
 	return (-1);	/* Value not found */
 }
